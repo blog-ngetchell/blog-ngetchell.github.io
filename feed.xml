@@ -3,35 +3,12 @@
     <title>ngetchell.com</title>
     <link href="https://blog-ngetchell.github.io/feed.xml" rel="self" />
     <link href="https://blog-ngetchell.github.io" />
-    <updated>2022-07-07T16:38:19-04:00</updated>
+    <updated>2022-06-09T19:48:38-04:00</updated>
     <author>
         <name>Nicholas M. Getchell</name>
     </author>
     <id>https://blog-ngetchell.github.io</id>
 
-    <entry>
-        <title>title</title>
-        <author>
-            <name>Nicholas M. Getchell</name>
-        </author>
-        <link href="https://blog-ngetchell.github.io/title/"/>
-        <id>https://blog-ngetchell.github.io/title/</id>
-
-        <updated>2022-07-07T16:38:19-04:00</updated>
-            <summary>
-                <![CDATA[
-                    test-connection test
-                ]]>
-            </summary>
-        <content type="html">
-            <![CDATA[
-                <pre><code class="language-powershell">test-connection
-</code></pre>
-<p>test</p>
-
-            ]]>
-        </content>
-    </entry>
     <entry>
         <title>Expring Group Membership</title>
         <author>

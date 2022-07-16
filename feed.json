@@ -10,20 +10,6 @@
     },
     "items": [
         {
-            "id": "https://blog-ngetchell.github.io/title/",
-            "url": "https://blog-ngetchell.github.io/title/",
-            "title": "title",
-            "summary": "test-connection test",
-            "content_html": "<pre><code class=\"language-powershell\">test-connection\n</code></pre>\n<p>test</p>\n",
-            "author": {
-                "name": "Nicholas M. Getchell"
-            },
-            "tags": [
-            ],
-            "date_published": "2022-07-07T16:38:19-04:00",
-            "date_modified": "2022-07-07T16:38:19-04:00"
-        },
-        {
             "id": "https://blog-ngetchell.github.io/expring-group-membership/",
             "url": "https://blog-ngetchell.github.io/expring-group-membership/",
             "title": "Expring Group Membership",
