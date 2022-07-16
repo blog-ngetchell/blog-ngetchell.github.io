@@ -1,0 +1,42 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "ngetchell.com",
+    "description": "",
+    "home_page_url": "https://blog-ngetchell.github.io",
+    "feed_url": "https://blog-ngetchell.github.io/feed.json",
+    "user_comment": "",
+    "author": {
+        "name": "Nicholas M. Getchell"
+    },
+    "items": [
+        {
+            "id": "https://blog-ngetchell.github.io/title/",
+            "url": "https://blog-ngetchell.github.io/title/",
+            "title": "title",
+            "summary": "test-connection test",
+            "content_html": "<pre><code class=\"language-powershell\">test-connection\n</code></pre>\n<p>test</p>\n",
+            "author": {
+                "name": "Nicholas M. Getchell"
+            },
+            "tags": [
+            ],
+            "date_published": "2022-07-07T16:38:19-04:00",
+            "date_modified": "2022-07-07T16:38:19-04:00"
+        },
+        {
+            "id": "https://blog-ngetchell.github.io/expring-group-membership/",
+            "url": "https://blog-ngetchell.github.io/expring-group-membership/",
+            "title": "Expring Group Membership",
+            "summary": "As a systems administrator working with Active Directory your probably proficient in granting access to network resources. How good are&hellip;",
+            "content_html": "<p>As a systems administrator working with Active Directory your probably proficient in granting access to network resources. How good are you at <em>removing</em> permissions once the access is no longer needed? Probably not as good. Enter Expiring Group Membership in Active Directory. You can specify how long an object belongs in a group. Active Directory handles the removal for you.</p>\n<p>To use Expiring Group Memberships, make sure that the feature is enabled in your forest. This is a feature added in Server 2016 and is not on by default.</p>\n<pre><code class=\"language-powershell\">## If Enabled EnabledScopes \n## won&#39;t be empty\n\n$Forest = Get-ADForest\nGet-ADOptionalFeature -Identity &#39;Privileged Access Management Feature&#39;\n\n## Enable Privileged Access\n\n$enableADOptionalFeatureSplat = @{\n    Scope = &#39;ForestOrConfigurationSet&#39;\n    Target = $Forest\n    Identity = &#39;Privileged Access Management Feature&#39;\n}\nEnable-ADOptionalFeature @enableADOptionalFeatureSplat\n</code></pre>\n<p>Existing groups should work but if you don’t have one, create a group now.</p>\n<pre><code class=\"language-powershell\">$newADGroupSplat = @{\n    GroupCategory = &#39;Security&#39;\n    DisplayName = &quot;Temporary Membership&quot;\n    GroupScope = &#39;Global&#39;\n    Name = &#39;TempGroup&#39;\n}\nNew-ADGroup @newADGroupSplat\n</code></pre>\n<p>Now add the membership using the MemberTimeToLive parameter.</p>\n<pre><code class=\"language-powershell\">$addADGroupMemberSplat = @{\n    Members = &#39;ngetchell&#39;\n    MemberTimeToLive = ( New-Timespan -Days 365)\n    Identity = &#39;TempGroup&#39;\n}\nAdd-ADGroupMember @addADGroupMemberSplat\n</code></pre>\n<h2 id=\"expiring-membership-report\">Expiring Membership Report</h2>\n<p>Now to generate a report to show off a members and their membership timespan. You could even pipe to Excel if you’d prefer.</p>\n<pre><code class=\"language-powershell\">Get-ADGroup -Identity TempGroup -ShowMemberTimeToLive -Properties members | \n    Select-Object -ExpandProperty members | \n    ForEach-Object {\n    if ( $_ -match &#39;&lt;TTL=&#39; ) {\n        $ttlstring, $DN = $_ -split &#39;&gt;&#39;\n\n        [int]$ttl = $ttlstring -replace &#39;&lt;TTL=&#39;\n        $Timespan = New-Timespan -Seconds $ttl\n        \n        [pscustomobject]@{\n            MemberDN   = $DN -replace &quot;^,&quot;, &quot;&quot;\n            TTL        = $Timespan\n            ExpiryDate = $((Get-Date).Add($Timespan))\n        } \n    }\n    else {\n        [pscustomobject]@{\n            MemberDN   = $_\n            TTL        = 0\n            ExpiryDate = 0\n        } \n    }\n} | Export-Excel -Path ~\\Desktop\\ExpiringGroupMembers.xlsx\n</code></pre>\n",
+            "author": {
+                "name": "Nicholas M. Getchell"
+            },
+            "tags": [
+                   "PowerShell"
+            ],
+            "date_published": "2019-02-13T03:00:00-05:00",
+            "date_modified": "2022-06-09T19:48:38-04:00"
+        }
+    ]
+}

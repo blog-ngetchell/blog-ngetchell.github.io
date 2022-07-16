@@ -1,1 +1,0 @@
-# blog-ngetchell.github.io

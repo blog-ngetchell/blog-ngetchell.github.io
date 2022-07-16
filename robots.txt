@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://blog-ngetchell.github.io/sitemap.xml

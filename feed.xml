@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>ngetchell.com</title>
+    <link href="https://blog-ngetchell.github.io/feed.xml" rel="self" />
+    <link href="https://blog-ngetchell.github.io" />
+    <updated>2022-07-07T16:38:19-04:00</updated>
+    <author>
+        <name>Nicholas M. Getchell</name>
+    </author>
+    <id>https://blog-ngetchell.github.io</id>
+
+    <entry>
+        <title>title</title>
+        <author>
+            <name>Nicholas M. Getchell</name>
+        </author>
+        <link href="https://blog-ngetchell.github.io/title/"/>
+        <id>https://blog-ngetchell.github.io/title/</id>
+
+        <updated>2022-07-07T16:38:19-04:00</updated>
+            <summary>
+                <![CDATA[
+                    test-connection test
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                <pre><code class="language-powershell">test-connection
+</code></pre>
+<p>test</p>
+
+            ]]>
+        </content>
+    </entry>
+    <entry>
+        <title>Expring Group Membership</title>
+        <author>
+            <name>Nicholas M. Getchell</name>
+        </author>
+        <link href="https://blog-ngetchell.github.io/expring-group-membership/"/>
+        <id>https://blog-ngetchell.github.io/expring-group-membership/</id>
+            <category term="PowerShell"/>
+
+        <updated>2022-06-09T19:48:38-04:00</updated>
+            <summary>
+                <![CDATA[
+                    As a systems administrator working with Active Directory your probably proficient in granting access to network resources. How good are&hellip;
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                <p>As a systems administrator working with Active Directory your probably proficient in granting access to network resources. How good are you at <em>removing</em> permissions once the access is no longer needed? Probably not as good. Enter Expiring Group Membership in Active Directory. You can specify how long an object belongs in a group. Active Directory handles the removal for you.</p>
+<p>To use Expiring Group Memberships, make sure that the feature is enabled in your forest. This is a feature added in Server 2016 and is not on by default.</p>
+<pre><code class="language-powershell">## If Enabled EnabledScopes 
+## won&#39;t be empty
+
+$Forest = Get-ADForest
+Get-ADOptionalFeature -Identity &#39;Privileged Access Management Feature&#39;
+
+## Enable Privileged Access
+
+$enableADOptionalFeatureSplat = @{
+    Scope = &#39;ForestOrConfigurationSet&#39;
+    Target = $Forest
+    Identity = &#39;Privileged Access Management Feature&#39;
+}
+Enable-ADOptionalFeature @enableADOptionalFeatureSplat
+</code></pre>
+<p>Existing groups should work but if you don’t have one, create a group now.</p>
+<pre><code class="language-powershell">$newADGroupSplat = @{
+    GroupCategory = &#39;Security&#39;
+    DisplayName = &quot;Temporary Membership&quot;
+    GroupScope = &#39;Global&#39;
+    Name = &#39;TempGroup&#39;
+}
+New-ADGroup @newADGroupSplat
+</code></pre>
+<p>Now add the membership using the MemberTimeToLive parameter.</p>
+<pre><code class="language-powershell">$addADGroupMemberSplat = @{
+    Members = &#39;ngetchell&#39;
+    MemberTimeToLive = ( New-Timespan -Days 365)
+    Identity = &#39;TempGroup&#39;
+}
+Add-ADGroupMember @addADGroupMemberSplat
+</code></pre>
+<h2 id="expiring-membership-report">Expiring Membership Report</h2>
+<p>Now to generate a report to show off a members and their membership timespan. You could even pipe to Excel if you’d prefer.</p>
+<pre><code class="language-powershell">Get-ADGroup -Identity TempGroup -ShowMemberTimeToLive -Properties members | 
+    Select-Object -ExpandProperty members | 
+    ForEach-Object {
+    if ( $_ -match &#39;&lt;TTL=&#39; ) {
+        $ttlstring, $DN = $_ -split &#39;&gt;&#39;
+
+        [int]$ttl = $ttlstring -replace &#39;&lt;TTL=&#39;
+        $Timespan = New-Timespan -Seconds $ttl
+        
+        [pscustomobject]@{
+            MemberDN   = $DN -replace &quot;^,&quot;, &quot;&quot;
+            TTL        = $Timespan
+            ExpiryDate = $((Get-Date).Add($Timespan))
+        } 
+    }
+    else {
+        [pscustomobject]@{
+            MemberDN   = $_
+            TTL        = 0
+            ExpiryDate = 0
+        } 
+    }
+} | Export-Excel -Path ~\Desktop\ExpiringGroupMembers.xlsx
+</code></pre>
+
+            ]]>
+        </content>
+    </entry>
+</feed>
