@@ -10,6 +10,20 @@
     },
     "items": [
         {
+            "id": "https://blog-ngetchell.github.io/get-command-syntax-vs-get-help/",
+            "url": "https://blog-ngetchell.github.io/get-command-syntax-vs-get-help/",
+            "title": "Get-Command -Syntax vs Get-Help",
+            "summary": "Wait, is Get-Help or Get-Command right? At the PowerShell Summit 2015 I witnessed Lee Holmes state that Get-Command is always&hellip;",
+            "content_html": "<p>Wait, is Get-Help or Get-Command right? At the PowerShell Summit 2015 I witnessed Lee Holmes state that Get-Command is always the better way to look up the syntax of a <a href=\"__GHOST_URL__/intro-to-cmdlets/\">cmdlet</a>. What did he mean by that? Get-Help and Get-Command are two of the only three cmdlets you need to know. The other being Get-Member. Why do you need both Get-Command AND Get-Help?</p>\n<p>A quick glance at the output of both commands reveals that the syntax parameter for Get-Command is similar to the help provided by Get-Help. Their function is very similar but derive their information from slightly different sources. When they show conflicting information, which one is correct?</p>\n<h2 id=\"get-help-limitations\">Get-Help Limitations</h2>\n<p>To understand the limitations of Get-Help, you need to know where Get-Help gets it’s content from. Get-Help shows the MAML or Comment-Based help written by the module author. It may also show generic help populated by PowerShell at run time. PowerShell will attempt to give you *something *when you ask for help on a cmdlet that doesn’t provide any.</p>\n<p>The help built into PowerShell also needs to be updated before you can rely on it. The installed help has to correspond to the version you’re running.</p>\n<h2 id=\"get-command-syntax\">Get-Command Syntax</h2>\n<p>Get-Command with the Syntax parameter ignores whatever the module author wrote for help and looks directly at the code on your machine to build out what parameters the cmdlet supports.</p>\n<p>The distinction is important when the help, or documentation of code is out of date. Another example would be if you used Update-Help and pulled down help for a <em>newer</em> version of the help than what you are running locally. Maybe a parameter was renamed, removed, or added in the help to reflect new functionality that you simply don’t have yet.</p>\n<h2 id=\"source-of-truth\">Source of Truth</h2>\n<p>The truth is, Get-Command -Syntax should be considered the source of truth when you are sitting at the console. It works out of the box, there isn’t a need to download anything for it to function, and it doesn’t rely on the module author to provide accurate documentation.</p>\n",
+            "author": {
+                "name": "Nicholas M. Getchell"
+            },
+            "tags": [
+            ],
+            "date_published": "2022-07-16T18:43:32-04:00",
+            "date_modified": "2022-07-16T18:44:15-04:00"
+        },
+        {
             "id": "https://blog-ngetchell.github.io/expring-group-membership/",
             "url": "https://blog-ngetchell.github.io/expring-group-membership/",
             "title": "Expring Group Membership",
